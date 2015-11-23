@@ -440,16 +440,20 @@ module Viewer{
                 BODY.removeClass('hideCursor');
 
                 this.textWrapper.removeClass('disableClick');
+                this.mainImg.    removeClass('disableClick');
+                this.centerBox.  removeClass('disableClick');
 
                 if(event.target.id === this.mainImg.id){
                     //hide cursor if it stops, show if it moves
                     this.mouseTimer = window.setTimeout(()=>{
                         this.mainImg.addClass('hideCursor');
-                        BODY.addClass('hideCursor');
                         this.textWrapper.addClass('disableClick');
-                        BODY.on('click',(event)=>{
-                            this.windowClick(event);
-                        });
+                        this.mainImg    .addClass('disableClick');
+                        this.centerBox  .addClass('disableClick');
+                        BODY.addClass('hideCursor')
+                            .on('click',(event)=>{
+                                this.windowClick(event);
+                            });
                     }, 200);
                 }
 
@@ -463,7 +467,6 @@ module Viewer{
 
         /*Stores a key value pair as a cookie*/
         static setPersistentValue(key:string, value:any){
-            console.log('setting '+key+'='+value);
             document.cookie = key + '='+value + ';expires=Thu, 01 Jan 3000 00:00:00 UTC;domain=.4chan.org;path=/';
         }
 
