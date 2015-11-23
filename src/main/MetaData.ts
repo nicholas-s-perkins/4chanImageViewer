@@ -6,5 +6,6 @@
 // @match   *://*.4chan.org/*/thread/*
 // @version 8.0
 // @copyright  2015+, Nicholas Perkins
+// @source https://github.com/nicholas-s-perkins/4chanImageViewer
 // ==/UserScript==
 "use strict";
