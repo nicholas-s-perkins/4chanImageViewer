@@ -10,3 +10,4 @@ This shows a button inside of 4chan threads that lets you open all of the images
 * Use Left and right arrows to page through images.
 * Hit Esc or click outside of image to close viewer.
 * The mouse cursor will auto-hide over an image. When hidden, clicking will still cause the next image to show.
+* Opens videos as well.  Videos auto-play and loop.
