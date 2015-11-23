@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "out": "out/viewer.js",
+    "sourceMap": true,
+    "target":"ES5"
+  } ,
+  "files":[
+    "src/main/viewer/Viewer.ts"
+  ]
+}
