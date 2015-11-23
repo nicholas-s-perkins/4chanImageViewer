@@ -1,2 +1,2 @@
-# 4chanViewer
+# 4chanImageViewer
 A Tampermonkey script for 4chan.  It creates a simple image browser for threads.
