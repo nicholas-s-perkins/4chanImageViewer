@@ -3,7 +3,7 @@
     "noImplicitAny": true,
     "removeComments": false,
     "preserveConstEnums": true,
-    "out": "out/viewer.js",
+    "out": "bin/viewer.js",
     "sourceMap": true,
     "target":"ES5"
   } ,
