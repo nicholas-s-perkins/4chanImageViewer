@@ -310,20 +310,11 @@ module Viewer{
             //console.log('Opening: "' + this.postData[this.linkIndex].imgSrc +'" at index ' + this.linkIndex);
             this.mainImg.setAttr('src',this.postData[newIndex].imgSrc);
 
-            let curLinks:DomUtil = this.postData[this.linkIndex].linksContainer;
-            let curQuote:DomUtil = this.postData[this.linkIndex].quoteContainer;
-            if(delta === 0){
-                this.textWrapper.empty();
-                this.textWrapper.append(curLinks);
-                this.textWrapper.append(curQuote);
-            }else{
-                //swap out old text and message
-                let nextLinks = this.postData[newIndex].linksContainer;
-                let nextQuote = this.postData[newIndex].quoteContainer;
-                curLinks.replace(nextLinks);
-                curQuote.replace(nextQuote);
-
-            }
+            let nextLinks:DomUtil = this.postData[newIndex].linksContainer;
+            let nextQuote:DomUtil = this.postData[newIndex].quoteContainer;
+            this.textWrapper.empty();
+            this.textWrapper.append(nextLinks);
+            this.textWrapper.append(nextQuote);
 
             this.linkIndex = newIndex;
             this.mainView.scrollToTop();
@@ -527,10 +518,3 @@ module Viewer{
 
 
 }
-
-
-
-
-    
-
-

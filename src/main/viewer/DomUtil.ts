@@ -171,7 +171,7 @@ module Viewer{
                 return this;
             }
 
-            public replace(replacement:DomUtil):DomUtil{
+            public replaceWith(replacement:DomUtil):DomUtil{
                 var replaceEle = replacement._elements;
                 this.each((element)=>{
                     if(element.parentElement){

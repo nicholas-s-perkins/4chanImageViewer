@@ -4,7 +4,7 @@
 // @description Opens current thread Images in 4chan into a popup viewer, tested in Tampermonkey
 // @match   *://*.4chan.org/*/res/*
 // @match   *://*.4chan.org/*/thread/*
-// @version 8.1
+// @version 8.02
 // @copyright  2015+, Nicholas Perkins
 // @source https://github.com/nicholas-s-perkins/4chanImageViewer
 // ==/UserScript==
@@ -181,7 +181,7 @@ var Viewer;
             }
             return this;
         };
-        DomUtil.prototype.replace = function (replacement) {
+        DomUtil.prototype.replaceWith = function (replacement) {
             var replaceEle = replacement._elements;
             this.each(function (element) {
                 if (element.parentElement) {
@@ -645,20 +645,11 @@ var Viewer;
             }
             //console.log('Opening: "' + this.postData[this.linkIndex].imgSrc +'" at index ' + this.linkIndex);
             this.mainImg.setAttr('src', this.postData[newIndex].imgSrc);
-            var curLinks = this.postData[this.linkIndex].linksContainer;
-            var curQuote = this.postData[this.linkIndex].quoteContainer;
-            if (delta === 0) {
-                this.textWrapper.empty();
-                this.textWrapper.append(curLinks);
-                this.textWrapper.append(curQuote);
-            }
-            else {
-                //swap out old text and message
-                var nextLinks = this.postData[newIndex].linksContainer;
-                var nextQuote = this.postData[newIndex].quoteContainer;
-                curLinks.replace(nextLinks);
-                curQuote.replace(nextQuote);
-            }
+            var nextLinks = this.postData[newIndex].linksContainer;
+            var nextQuote = this.postData[newIndex].quoteContainer;
+            this.textWrapper.empty();
+            this.textWrapper.append(nextLinks);
+            this.textWrapper.append(nextQuote);
             this.linkIndex = newIndex;
             this.mainView.scrollToTop();
             MainView.setPersistentValue(INDEX_KEY, this.linkIndex);
