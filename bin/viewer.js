@@ -5,7 +5,7 @@
 // @match   *://*.4chan.org/*/res/*
 // @match   *://*.4chan.org/*/thread/*
 // @match   *://*.4channel.org/*/thread/*
-// @version 8.02
+// @version 8.3
 // @copyright  2019+, Nicholas Perkins
 // @source https://github.com/nicholas-s-perkins/4chanImageViewer
 // ==/UserScript==
@@ -355,24 +355,18 @@ var Viewer;
             return new DomUtil(ele);
         };
         DomUtil.createElement = function (tagName, props) {
-            var ele = document.createElement(tagName);
+            var newEle = document.createElement(tagName);
             if (props) {
-                for (var propName in props) {
-                    if (props.hasOwnProperty(propName)) {
-                        if (propName === 'style') {
-                            for (var styleName in props[propName]) {
-                                if (props.style.hasOwnProperty(styleName)) {
-                                    ele.style[styleName] = props.style[styleName];
-                                }
-                            }
-                        }
-                        else {
-                            ele[propName] = props[propName];
-                        }
+                Object.keys(props).forEach(function (propName) {
+                    if (propName == "style") {
+                        newEle.style.cssText = props.style.cssText;
                     }
-                }
+                    else {
+                        newEle[propName] = props[propName];
+                    }
+                });
             }
-            return new DomUtil(ele);
+            return new DomUtil(newEle);
         };
         return DomUtil;
     }());

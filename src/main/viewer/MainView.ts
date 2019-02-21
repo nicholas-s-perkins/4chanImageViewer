@@ -345,7 +345,7 @@ module Viewer {
 
 
         replaceElement(element: DomUtil, newTagType: string) {
-            const rawElement = <HTMLVideoElement>element.elementList[0];
+            const rawElement = element.elementList[0];
 
             const newElement = DomUtil.createElement(newTagType, {
                 id: element.id,

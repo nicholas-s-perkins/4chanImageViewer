@@ -328,24 +328,18 @@ module Viewer {
         }
 
         public static createElement(tagName: string, props?: any): DomUtil {
-            const ele: any = document.createElement(tagName);
+            const newEle: any = document.createElement(tagName);
             if (props) {
-                for (let propName in props) {
-                    if (props.hasOwnProperty(propName)) {
-                        if (propName === 'style') {
-                            for (let styleName in props[propName]) {
-                                if (props.style.hasOwnProperty(styleName)) {
-                                    ele.style[styleName] = props.style[styleName]
-                                }
-                            }
-                        } else {
-                            ele[propName] = props[propName];
-                        }
+                Object.keys(props).forEach(propName => {
+                    if(propName == "style"){
+                        newEle.style.cssText = props.style.cssText;
+                    }else{
+                        newEle[propName] = props[propName];
                     }
-                }
+                });
             }
 
-            return new DomUtil(ele);
+            return new DomUtil(newEle);
         }
     }
 
