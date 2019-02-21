@@ -1,4 +1,4 @@
-module Viewer{
+module Viewer {
     //IDs for important elements
     export const VIEW_ID = "mainView";
     export const IMG_ID = "mainImg";
@@ -11,7 +11,7 @@ module Viewer{
     export const LEFT_ARROW = 'previousImageButton';
     export const RIGHT_ARROW = 'nextImageButton';
 
-    export const STYLE_TEXT=`
+    export const STYLE_TEXT = `
         div.reply.highlight,div.reply.highlight-anti{z-index:100 !important;position:fixed !important; top:1%;left:1%;}
         body{overflow:hidden !important;}
         #quote-preview{z-index:100;}

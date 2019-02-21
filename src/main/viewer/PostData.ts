@@ -1,17 +1,16 @@
 module Viewer {
-    export enum TagType{
+    export enum TagType {
         IMG, VIDEO
     }
 
     export class PostData {
-        public imgSrc:string;
-        public quoteContainer:DomUtil;
-        public linksContainer:DomUtil;
-        public imageLink:DomUtil;
-        public tagType:TagType;
+        public imgSrc: string;
+        public quoteContainer: DomUtil;
+        public linksContainer: DomUtil;
+        public imageLink: DomUtil;
+        public tagType: TagType;
 
-
-        constructor(imgSrc:string, quoteContainer:DomUtil, linksContainer:DomUtil,imageLink:DomUtil) {
+        constructor(imgSrc: string, quoteContainer: DomUtil, linksContainer: DomUtil, imageLink: DomUtil) {
             this.imgSrc = imgSrc;
             this.linksContainer = linksContainer;
             this.quoteContainer = quoteContainer;
@@ -20,13 +19,12 @@ module Viewer {
         }
 
 
-        public get tagTypeName():string {
+        public get tagTypeName(): string {
             return TagType[this.tagType];
         }
 
 
-
-        private static getElementType(src:string):TagType {
+        private static getElementType(src: string): TagType {
             if (src.match(/\.(?:(?:webm)|(?:ogg)|(?:mp4))$/)) {
                 return TagType.VIDEO;
             } else {
@@ -34,18 +32,18 @@ module Viewer {
             }
         }
 
-        private static add4chanListenersToLinks(linkCollection:DomUtil) {
+        private static add4chanListenersToLinks(linkCollection: DomUtil) {
             linkCollection.find('.quotelink')
                 .on('mouseover', Main.onThreadMouseOver)
                 .on('mouseout', Main.onThreadMouseOut);
         }
 
 
-        public static getImagePosts(asCopy:boolean):Array<PostData> {
-            var postData:Array<PostData> = [];
+        public static getImagePosts(asCopy: boolean): Array<PostData> {
+            var postData: Array<PostData> = [];
             var postFiles = DomUtil.get('#delform').find('.postContainer');
 
-            postFiles.each((post)=> {
+            postFiles.each((post) => {
                 var _post = DomUtil.get(post);
 
                 var currentLinkTag = _post.find('.file .fileThumb');
@@ -57,9 +55,9 @@ module Viewer {
                 var currentPostBlock = _post.find('.postMessage');
                 var currentPostBacklinks = _post.find('.backlink');
 
-                var newPostBlock:DomUtil = currentPostBlock;
-                var newBackLinks:DomUtil = currentPostBacklinks;
-                if(asCopy){
+                var newPostBlock: DomUtil = currentPostBlock;
+                var newBackLinks: DomUtil = currentPostBacklinks;
+                if (asCopy) {
                     if (currentPostBlock.exists) {
                         newPostBlock = currentPostBlock.lightClone();
                         newPostBlock.addClass('viewerBlockQuote');
@@ -72,7 +70,7 @@ module Viewer {
                     }
                 }
 
-                postData.push(new PostData(currentLink, newPostBlock, newBackLinks,currentLinkTag));
+                postData.push(new PostData(currentLink, newPostBlock, newBackLinks, currentLinkTag));
             });
 
             return postData;

@@ -21,8 +21,8 @@ module Viewer {
 
 
     // ========= Build buttons for each image thumbnail ========= //
-        var posts:Array<PostData> = PostData.getImagePosts(false);
-        var imagePostCount = 0;
+        const posts: Array<PostData> = PostData.getImagePosts(false);
+        let imagePostCount = 0;
         for (let post of posts) {
             DomUtil.createElement('button')
                 .setStyle({
@@ -36,11 +36,11 @@ module Viewer {
                     postIndex: imagePostCount
                 })
                 .html('Open Viewer')
-                .on('click', function (e:Event) {
+                .on('click', function (this: HTMLElement, e:Event) {
                     e.preventDefault();
                     e.stopPropagation();
                     //make the viewer and put it on the window so we can clean it up later
-                    new MainView(parseInt(this.dataset.postIndex));
+                    new MainView(parseInt(this.dataset.postIndex as string));
                 })
                 .appendTo(post.imageLink);
 

@@ -4,8 +4,9 @@
 // @description Opens current thread Images in 4chan into a popup viewer, tested in Tampermonkey
 // @match   *://*.4chan.org/*/res/*
 // @match   *://*.4chan.org/*/thread/*
+// @match   *://*.4channel.org/*/thread/*
 // @version 8.02
-// @copyright  2015+, Nicholas Perkins
+// @copyright  2019+, Nicholas Perkins
 // @source https://github.com/nicholas-s-perkins/4chanImageViewer
 // ==/UserScript==
 "use strict";
@@ -14,7 +15,7 @@ var Viewer;
     /**
      * Didn't want to use any external libraries.  This is my handy library for dealing with the DOM
      */
-    var DomUtil = (function () {
+    var DomUtil = /** @class */ (function () {
         function DomUtil(obj) {
             this._elements = [];
             this._listeners = [];
@@ -50,8 +51,8 @@ var Viewer;
             var _this = this;
             var handlers = handler.split(' ');
             this.each(function (element) {
-                for (var _i = 0; _i < handlers.length; _i++) {
-                    var handler_1 = handlers[_i];
+                for (var _i = 0, handlers_1 = handlers; _i < handlers_1.length; _i++) {
+                    var handler_1 = handlers_1[_i];
                     _this._listeners.push(new Listener(element, handler_1, func));
                     element.addEventListener(handler_1, func, false);
                 }
@@ -167,17 +168,21 @@ var Viewer;
             for (var _i = 0, _a = this._elements; _i < _a.length; _i++) {
                 var element = _a[_i];
                 for (var propName in styleConfig) {
+                    // @ts-ignore
                     element.style[propName] = styleConfig[propName];
                 }
             }
             return this;
         };
         DomUtil.prototype.setData = function (data) {
+            var _loop_1 = function (element) {
+                Object.keys(data).forEach(function (propName) {
+                    element.dataset[propName] = data[propName];
+                });
+            };
             for (var _i = 0, _a = this._elements; _i < _a.length; _i++) {
                 var element = _a[_i];
-                for (var propName in data) {
-                    element.dataset[propName] = data[propName];
-                }
+                _loop_1(element);
             }
             return this;
         };
@@ -282,7 +287,7 @@ var Viewer;
         DomUtil.prototype.addClass = function () {
             var classNames = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                classNames[_i - 0] = arguments[_i];
+                classNames[_i] = arguments[_i];
             }
             this.each(function (element) {
                 element.classList.add.apply(element.classList, classNames);
@@ -292,7 +297,7 @@ var Viewer;
         DomUtil.prototype.removeClass = function () {
             var classNames = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                classNames[_i - 0] = arguments[_i];
+                classNames[_i] = arguments[_i];
             }
             this.each(function (element) {
                 element.classList.remove.apply(element.classList, classNames);
@@ -370,16 +375,16 @@ var Viewer;
             return new DomUtil(ele);
         };
         return DomUtil;
-    })();
+    }());
     Viewer.DomUtil = DomUtil;
-    var Listener = (function () {
+    var Listener = /** @class */ (function () {
         function Listener(element, type, func) {
             this.type = type;
             this.func = func;
             this.element = element;
         }
         return Listener;
-    })();
+    }());
     Viewer.Listener = Listener;
 })(Viewer || (Viewer = {}));
 var Viewer;
@@ -409,27 +414,15 @@ var Viewer;
     var BODY = Viewer.DomUtil.get(document.body);
     var WINDOW = Viewer.DomUtil.get(window);
     var UNSAFE_WINDOW = Viewer.DomUtil.get(typeof unsafeWindow === 'undefined' ? window : unsafeWindow);
-    var MainView = (function () {
+    var MainView = /** @class */ (function () {
         function MainView(imagePostIndex) {
             var _this = this;
             this.postData = [];
             this.linkIndex = 0;
-            //elements to keep track of
-            this.mainView = null;
-            this.mainImg = null;
-            this.centerBox = null;
-            this.topLayer = null;
-            this.customStyle = null;
-            this.textWrapper = null;
-            this.leftArrow = null;
-            this.rightArrow = null;
-            this.bottomMenu = null;
             /** Determines if pre-loading can happen*/
             this.canPreload = false;
             /** determines if height of the image should be fit */
             this.shouldFitHeight = false;
-            /** Keeps track of the process watching the mouse */
-            this.mouseTimer = null;
             this.lastMousePos = { x: 0, y: 0 };
             console.log("Building 4chan Image Viewer");
             var currentThreadId = Viewer.DomUtil.get('.thread').id;
@@ -437,8 +430,15 @@ var Viewer;
                 this.linkIndex = imagePostIndex;
                 MainView.setPersistentValue(INDEX_KEY, imagePostIndex);
             }
+            //check if its the last thread opened, if so, remember where the index was.
             else if (MainView.getPersistentValue(THREAD_KEY) === currentThreadId) {
-                this.linkIndex = parseInt(MainView.getPersistentValue(INDEX_KEY));
+                var savedVal = MainView.getPersistentValue(INDEX_KEY);
+                if (savedVal != undefined) {
+                    this.linkIndex = parseInt(savedVal);
+                }
+                else {
+                    this.linkIndex = 0;
+                }
             }
             else {
                 this.linkIndex = 0;
@@ -469,9 +469,15 @@ var Viewer;
             this.leftArrow = Viewer.DomUtil.getById(Viewer.LEFT_ARROW);
             this.rightArrow = Viewer.DomUtil.getById(Viewer.RIGHT_ARROW);
             //add handlers
-            this.centerBox.on('click', function () { _this.confirmExit(); });
-            this.textWrapper.on('click', function (event) { _this.eventStopper(event); });
-            this.bottomMenu.on('click', function () { _this.menuClickHandler(); });
+            this.centerBox.on('click', function () {
+                _this.confirmExit();
+            });
+            this.textWrapper.on('click', function (event) {
+                _this.eventStopper(event);
+            });
+            this.bottomMenu.on('click', function () {
+                _this.menuClickHandler();
+            });
             this.leftArrow.on('click', function (event) {
                 event.stopImmediatePropagation();
                 _this.previousImg();
@@ -507,20 +513,21 @@ var Viewer;
             var _this = this;
             var menuControls = this.bottomMenu.find('input');
             menuControls.each(function (input) {
+                var typedInput = input;
                 var cookieValue = MainView.getPersistentValue(input.id);
                 if (cookieValue === 'true') {
-                    input.checked = true;
+                    typedInput.checked = true;
                 }
                 else if (cookieValue === 'false') {
-                    input.checked = false;
+                    typedInput.checked = false;
                 }
-                input.parentElement.classList.toggle('flash', input.checked);
-                switch (input.id) {
+                typedInput.parentElement.classList.toggle('flash', typedInput.checked);
+                switch (typedInput.id) {
                     case WIDTH_KEY:
-                        _this.setFitToScreenWidth(input.checked);
+                        _this.setFitToScreenWidth(typedInput.checked);
                         break;
                     case HEIGHT_KEY:
-                        _this.setFitToScreenHeight(input.checked);
+                        _this.setFitToScreenHeight(typedInput.checked);
                         break;
                 }
             });
@@ -528,7 +535,8 @@ var Viewer;
         MainView.prototype.menuClickHandler = function () {
             var _this = this;
             var menuControls = this.bottomMenu.find('input');
-            menuControls.each(function (input) {
+            menuControls.each(function (ele) {
+                var input = ele;
                 switch (input.id) {
                     case WIDTH_KEY:
                         _this.setFitToScreenWidth(input.checked);
@@ -569,7 +577,9 @@ var Viewer;
             if (this && index < this.postData.length) {
                 if (this.canPreload) {
                     //console.log('preloading: ' + index +' of '+(this.postData.length - 1) +' | '+ this.postData[index].imgSrc);
-                    var loadFunc = function () { _this.runImagePreloading(index + 1); };
+                    var loadFunc = function () {
+                        _this.runImagePreloading(index + 1);
+                    };
                     //have yet to figure out how to properly preload video, skip for now
                     if (this.postData[index].tagType === Viewer.TagType.VIDEO) {
                         window.setTimeout(loadFunc, 1);
@@ -775,7 +785,7 @@ var Viewer;
                 return cookieMatch[1];
             }
             else {
-                return null;
+                return undefined;
             }
         };
         MainView.prototype.setFitToScreenHeight = function (shouldFitImage) {
@@ -816,17 +826,17 @@ var Viewer;
             }
         };
         return MainView;
-    })();
+    }());
     Viewer.MainView = MainView;
 })(Viewer || (Viewer = {}));
 var Viewer;
 (function (Viewer) {
+    var TagType;
     (function (TagType) {
         TagType[TagType["IMG"] = 0] = "IMG";
         TagType[TagType["VIDEO"] = 1] = "VIDEO";
-    })(Viewer.TagType || (Viewer.TagType = {}));
-    var TagType = Viewer.TagType;
-    var PostData = (function () {
+    })(TagType = Viewer.TagType || (Viewer.TagType = {}));
+    var PostData = /** @class */ (function () {
         function PostData(imgSrc, quoteContainer, linksContainer, imageLink) {
             this.imgSrc = imgSrc;
             this.linksContainer = linksContainer;
@@ -885,7 +895,7 @@ var Viewer;
             return postData;
         };
         return PostData;
-    })();
+    }());
     Viewer.PostData = PostData;
 })(Viewer || (Viewer = {}));
 /// <reference path="../MetaData.ts"/>
@@ -907,8 +917,8 @@ var Viewer;
         // ========= Build buttons for each image thumbnail ========= //
         var posts = Viewer.PostData.getImagePosts(false);
         var imagePostCount = 0;
-        for (var _i = 0; _i < posts.length; _i++) {
-            var post = posts[_i];
+        for (var _i = 0, posts_1 = posts; _i < posts_1.length; _i++) {
+            var post = posts_1[_i];
             Viewer.DomUtil.createElement('button')
                 .setStyle({
                 display: 'inline',

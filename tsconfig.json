@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "noImplicitAny": true,
+    "strict": true,
     "removeComments": false,
     "preserveConstEnums": true,
     "out": "bin/viewer.js",
