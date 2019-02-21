@@ -11,6 +11,11 @@ module Viewer {
     export const LEFT_ARROW = 'previousImageButton';
     export const RIGHT_ARROW = 'nextImageButton';
 
+    export const TOP_MENU_ID = 'viewerMenuHeader';
+    export const VIEWER_PAGE_DISPLAY = "viewerPageDisplay";
+    export const VIEWER_TOTAL_DISPLAY = "viewerTotalDisplay";
+    export const VIEWER_IMG_NAME_DISPLAY = "viewerNameDisplay";
+
     export const STYLE_TEXT = `
         div.reply.highlight,div.reply.highlight-anti{z-index:100 !important;position:fixed !important; top:1%;left:1%;}
         body{overflow:hidden !important;}
@@ -34,6 +39,7 @@ module Viewer {
         #${TEXT_WRAPPER_ID}{max-width:60em;display:inline-block; color:gray;-webkit-user-select: all;}
         .bottomMenuShow{visibility:visible;}
         #${MENU_ID}{box-shadow: -1px -1px 5px #888888;font-size:20px;padding:5px;background-color:white;position:fixed;bottom:0;right:0;z-index:200;}
+        #${TOP_MENU_ID}{font-size:20px;padding:5px;background-color:white;position:fixed;top:0;left:0;text-align:center;width:100%;color:black;z-index:200;}
         .hideCursor{cursor:none !important;}
         .hidden{visibility:hidden}
         .displayNone{display:none;}

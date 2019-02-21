@@ -155,6 +155,10 @@ module Viewer {
             return this;
         }
 
+        public setText(text: any): DomUtil {
+            this.each(element => element.innerText = `${text}`);
+            return this;
+        }
 
         public setStyle(styleConfig: any): DomUtil {
             for (let element of this._elements) {

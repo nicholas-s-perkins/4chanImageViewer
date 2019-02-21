@@ -5,7 +5,7 @@
 // @match   *://*.4chan.org/*/res/*
 // @match   *://*.4chan.org/*/thread/*
 // @match   *://*.4channel.org/*/thread/*
-// @version 8.3
+// @version 8.4
 // @copyright  2019+, Nicholas Perkins
 // @source https://github.com/nicholas-s-perkins/4chanImageViewer
 // ==/UserScript==

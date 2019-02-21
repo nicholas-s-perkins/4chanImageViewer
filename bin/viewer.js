@@ -5,7 +5,7 @@
 // @match   *://*.4chan.org/*/res/*
 // @match   *://*.4chan.org/*/thread/*
 // @match   *://*.4channel.org/*/thread/*
-// @version 8.3
+// @version 8.4
 // @copyright  2019+, Nicholas Perkins
 // @source https://github.com/nicholas-s-perkins/4chanImageViewer
 // ==/UserScript==
@@ -162,6 +162,10 @@ var Viewer;
             this.each(function (element) {
                 element[attr] = value;
             });
+            return this;
+        };
+        DomUtil.prototype.setText = function (text) {
+            this.each(function (element) { return element.innerText = "" + text; });
             return this;
         };
         DomUtil.prototype.setStyle = function (styleConfig) {
@@ -394,7 +398,11 @@ var Viewer;
     Viewer.MENU_ID = 'viewerBottomMenu';
     Viewer.LEFT_ARROW = 'previousImageButton';
     Viewer.RIGHT_ARROW = 'nextImageButton';
-    Viewer.STYLE_TEXT = "\n        div.reply.highlight,div.reply.highlight-anti{z-index:100 !important;position:fixed !important; top:1%;left:1%;}\n        body{overflow:hidden !important;}\n        #quote-preview{z-index:100;}\n        a.quotelink, div.viewerBacklinks a.quotelink{color:#5c5cff !important;}\n        a.quotelink:hover, div.viewerBacklinks a:hover{color:red !important;}\n        #" + Viewer.IMG_ID + "{display:block !important; margin:auto;max-width:100%;height:auto;-webkit-user-select: none;cursor:pointer;}\n        #" + Viewer.VIEW_ID + "{\n            background-color:rgba(0,0,0,0.9);\n            z-index:10;\n            position:fixed;\n            top:0;left:0;bottom:0;right:0;\n            overflow:auto;\n            text-align:center;\n            -webkit-user-select: none;\n        }\n        #" + Viewer.CENTER_BOX_ID + " {display:flex;align-items:center;justify-content:center;flex-direction: column;min-height:100%;}\n        #" + Viewer.IMG_WRAPPER_ID + " {width:100%;}\n        #" + Viewer.TOP_LAYER_ID + "{position:fixed;top:0;bottom:0;left:0;right:0;z-index:20;opacity:0;visibility:hidden;transition:all .25s ease;}\n        .viewerBlockQuote{color:white;}\n        #" + Viewer.TEXT_WRAPPER_ID + "{max-width:60em;display:inline-block; color:gray;-webkit-user-select: all;}\n        .bottomMenuShow{visibility:visible;}\n        #" + Viewer.MENU_ID + "{box-shadow: -1px -1px 5px #888888;font-size:20px;padding:5px;background-color:white;position:fixed;bottom:0;right:0;z-index:200;}\n        .hideCursor{cursor:none !important;}\n        .hidden{visibility:hidden}\n        .displayNone{display:none;}\n        .pagingButtons{font-size:100px;color:white;text-shadow: 1px 1px 10px #27E3EB;z-index: 11;top: 50%;position: fixed;margin-top: -57px;width:100px;cursor:pointer;-webkit-user-select: none;}\n        .pagingButtons:hover{color:#27E3EB;text-shadow: 1px 1px 10px #000}\n        #" + Viewer.LEFT_ARROW + "{left:0;text-align:left;}\n        #" + Viewer.RIGHT_ARROW + "{right:0;text-align:right;}\n        @-webkit-keyframes flashAnimation{0%{ text-shadow: none;}100%{text-shadow: 0px 0px 5px blue;}}\n        .flash{-webkit-animation: flashAnimation 1s alternate infinite  linear;cursor:pointer;}\n        .disableClick, .disableClick a{pointer-events: none;}\n        ";
+    Viewer.TOP_MENU_ID = 'viewerMenuHeader';
+    Viewer.VIEWER_PAGE_DISPLAY = "viewerPageDisplay";
+    Viewer.VIEWER_TOTAL_DISPLAY = "viewerTotalDisplay";
+    Viewer.VIEWER_IMG_NAME_DISPLAY = "viewerNameDisplay";
+    Viewer.STYLE_TEXT = "\n        div.reply.highlight,div.reply.highlight-anti{z-index:100 !important;position:fixed !important; top:1%;left:1%;}\n        body{overflow:hidden !important;}\n        #quote-preview{z-index:100;}\n        a.quotelink, div.viewerBacklinks a.quotelink{color:#5c5cff !important;}\n        a.quotelink:hover, div.viewerBacklinks a:hover{color:red !important;}\n        #" + Viewer.IMG_ID + "{display:block !important; margin:auto;max-width:100%;height:auto;-webkit-user-select: none;cursor:pointer;}\n        #" + Viewer.VIEW_ID + "{\n            background-color:rgba(0,0,0,0.9);\n            z-index:10;\n            position:fixed;\n            top:0;left:0;bottom:0;right:0;\n            overflow:auto;\n            text-align:center;\n            -webkit-user-select: none;\n        }\n        #" + Viewer.CENTER_BOX_ID + " {display:flex;align-items:center;justify-content:center;flex-direction: column;min-height:100%;}\n        #" + Viewer.IMG_WRAPPER_ID + " {width:100%;}\n        #" + Viewer.TOP_LAYER_ID + "{position:fixed;top:0;bottom:0;left:0;right:0;z-index:20;opacity:0;visibility:hidden;transition:all .25s ease;}\n        .viewerBlockQuote{color:white;}\n        #" + Viewer.TEXT_WRAPPER_ID + "{max-width:60em;display:inline-block; color:gray;-webkit-user-select: all;}\n        .bottomMenuShow{visibility:visible;}\n        #" + Viewer.MENU_ID + "{box-shadow: -1px -1px 5px #888888;font-size:20px;padding:5px;background-color:white;position:fixed;bottom:0;right:0;z-index:200;}\n        #" + Viewer.TOP_MENU_ID + "{font-size:20px;padding:5px;background-color:white;position:fixed;top:0;left:0;text-align:center;width:100%;color:black;z-index:200;}\n        .hideCursor{cursor:none !important;}\n        .hidden{visibility:hidden}\n        .displayNone{display:none;}\n        .pagingButtons{font-size:100px;color:white;text-shadow: 1px 1px 10px #27E3EB;z-index: 11;top: 50%;position: fixed;margin-top: -57px;width:100px;cursor:pointer;-webkit-user-select: none;}\n        .pagingButtons:hover{color:#27E3EB;text-shadow: 1px 1px 10px #000}\n        #" + Viewer.LEFT_ARROW + "{left:0;text-align:left;}\n        #" + Viewer.RIGHT_ARROW + "{right:0;text-align:right;}\n        @-webkit-keyframes flashAnimation{0%{ text-shadow: none;}100%{text-shadow: 0px 0px 5px blue;}}\n        .flash{-webkit-animation: flashAnimation 1s alternate infinite  linear;cursor:pointer;}\n        .disableClick, .disableClick a{pointer-events: none;}\n        ";
 })(Viewer || (Viewer = {}));
 var Viewer;
 (function (Viewer) {
@@ -451,7 +459,7 @@ var Viewer;
             var isHeight = MainView.getPersistentValue(HEIGHT_KEY);
             this.shouldFitHeight = isHeight ? true : false;
             var menuHtml = "\n                <label><input id=\"" + WIDTH_KEY + "\" type=\"checkbox\" checked=\"checked\" />Fit Image to Width</label>\n                <span>|</span>\n                <label><input id=\"" + HEIGHT_KEY + "\" type=\"checkbox\" />Fit Image to Height</label>\n            ";
-            var viewFrag = "\n                <style id=\"" + Viewer.STYLE_ID + "\">" + Viewer.STYLE_TEXT + "</style>\n                <div id=\"" + Viewer.VIEW_ID + "\">\n                    <div id=\"" + Viewer.CENTER_BOX_ID + "\">\n                        <div id=\"" + Viewer.IMG_WRAPPER_ID + "\">\n                            <img id=\"" + Viewer.IMG_ID + "\" class=\"hideCursor\"/>\n                        </div>\n                        <div id=\"" + Viewer.TEXT_WRAPPER_ID + "\"></div>\n                    </div>\n                    <div id=\"" + Viewer.LEFT_ARROW + "\" class=\"pagingButtons hidden\"><span>&#9001;</span></div>\n                    <div id=\"" + Viewer.RIGHT_ARROW + "\" class=\"pagingButtons hidden\"><span>&#9002;</span></div>\n                </div>\n                <div id=\"" + Viewer.TOP_LAYER_ID + "\">&nbsp;</div>\n                <form id=\"" + Viewer.MENU_ID + "\" class=\"hidden\">" + menuHtml + "</form>\n            ";
+            var viewFrag = "\n                <style id=\"" + Viewer.STYLE_ID + "\">" + Viewer.STYLE_TEXT + "</style>\n                <div id=\"" + Viewer.TOP_MENU_ID + "\" class=\"hidden\">\n                  <div><span id=\"" + Viewer.VIEWER_PAGE_DISPLAY + "\"></span><span> of </span><span id=\"" + Viewer.VIEWER_TOTAL_DISPLAY + "\"></span></div>\n                  <div><span id=\"" + Viewer.VIEWER_IMG_NAME_DISPLAY + "\"></span></div>\n                </div>\n                <div id=\"" + Viewer.VIEW_ID + "\">\n                    <div id=\"" + Viewer.CENTER_BOX_ID + "\">\n                        <div id=\"" + Viewer.IMG_WRAPPER_ID + "\">\n                            <img id=\"" + Viewer.IMG_ID + "\" class=\"hideCursor\"/>\n                        </div>\n                        <div id=\"" + Viewer.TEXT_WRAPPER_ID + "\"></div>\n                    </div>\n                    <div id=\"" + Viewer.LEFT_ARROW + "\" class=\"pagingButtons hidden\"><span>&#9001;</span></div>\n                    <div id=\"" + Viewer.RIGHT_ARROW + "\" class=\"pagingButtons hidden\"><span>&#9002;</span></div>\n                </div>\n                <div id=\"" + Viewer.TOP_LAYER_ID + "\">&nbsp;</div>\n                <form id=\"" + Viewer.MENU_ID + "\" class=\"hidden\">" + menuHtml + "</form>\n            ";
             BODY.append(viewFrag);
             this.mainView = Viewer.DomUtil.getById(Viewer.VIEW_ID);
             this.centerBox = Viewer.DomUtil.getById(Viewer.CENTER_BOX_ID);
@@ -462,6 +470,10 @@ var Viewer;
             this.bottomMenu = Viewer.DomUtil.getById(Viewer.MENU_ID);
             this.leftArrow = Viewer.DomUtil.getById(Viewer.LEFT_ARROW);
             this.rightArrow = Viewer.DomUtil.getById(Viewer.RIGHT_ARROW);
+            this.topMenu = Viewer.DomUtil.getById(Viewer.TOP_MENU_ID);
+            this.pageDisplay = Viewer.DomUtil.getById(Viewer.VIEWER_PAGE_DISPLAY);
+            this.totalDisplay = Viewer.DomUtil.getById(Viewer.VIEWER_TOTAL_DISPLAY);
+            this.nameDisplay = Viewer.DomUtil.getById(Viewer.VIEWER_IMG_NAME_DISPLAY);
             //add handlers
             this.centerBox.on('click', function () {
                 _this.confirmExit();
@@ -657,6 +669,10 @@ var Viewer;
             this.linkIndex = newIndex;
             this.mainView.scrollToTop();
             MainView.setPersistentValue(INDEX_KEY, this.linkIndex);
+            //update menu info
+            this.pageDisplay.setText(this.linkIndex + 1);
+            this.totalDisplay.setText(this.postData.length);
+            this.nameDisplay.setText(this.postData[newIndex].imgSrc);
         };
         MainView.cleanLinks = function () {
             var links = document.getElementsByClassName('quotelink');
@@ -728,9 +744,11 @@ var Viewer;
             var halfArrow = this.leftArrow.offsetHeight / 2;
             if (event.clientX >= width_offset && event.clientY >= height_offset) {
                 this.bottomMenu.removeClass('hidden').addClass('bottomMenuShow');
+                this.topMenu.removeClass('hidden').addClass('bottomMenuShow');
             }
             else if (this.bottomMenu.hasClass('bottomMenuShow')) {
                 this.bottomMenu.removeClass('bottomMenuShow').addClass('hidden');
+                this.topMenu.removeClass('bottomMenuShow').addClass('hidden');
             }
             if ((event.clientX <= (100) || event.clientX >= (window.innerWidth - 100)) &&
                 (event.clientY <= (center + halfArrow) && event.clientY >= (center - halfArrow))) {

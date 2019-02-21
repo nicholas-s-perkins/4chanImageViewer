@@ -27,6 +27,12 @@ module Viewer {
         private rightArrow: DomUtil;
         private bottomMenu: DomUtil;
 
+        // probably should be encapsulated
+        private topMenu: DomUtil;
+        private pageDisplay: DomUtil;
+        private totalDisplay: DomUtil;
+        private nameDisplay: DomUtil;
+
         /** Determines if pre-loading can happen*/
         private canPreload: boolean = false;
 
@@ -85,6 +91,10 @@ module Viewer {
 
             const viewFrag = `
                 <style id="${STYLE_ID}">${STYLE_TEXT}</style>
+                <div id="${TOP_MENU_ID}" class="hidden">
+                  <div><span id="${VIEWER_PAGE_DISPLAY}"></span><span> of </span><span id="${VIEWER_TOTAL_DISPLAY}"></span></div>
+                  <div><span id="${VIEWER_IMG_NAME_DISPLAY}"></span></div>
+                </div>
                 <div id="${VIEW_ID}">
                     <div id="${CENTER_BOX_ID}">
                         <div id="${IMG_WRAPPER_ID}">
@@ -109,6 +119,11 @@ module Viewer {
             this.bottomMenu = DomUtil.getById(MENU_ID);
             this.leftArrow = DomUtil.getById(LEFT_ARROW);
             this.rightArrow = DomUtil.getById(RIGHT_ARROW);
+
+            this.topMenu = DomUtil.getById(TOP_MENU_ID);
+            this.pageDisplay = DomUtil.getById(VIEWER_PAGE_DISPLAY);
+            this.totalDisplay = DomUtil.getById(VIEWER_TOTAL_DISPLAY);
+            this.nameDisplay = DomUtil.getById(VIEWER_IMG_NAME_DISPLAY);
 
             //add handlers
             this.centerBox.on('click', () => {
@@ -334,6 +349,11 @@ module Viewer {
             this.linkIndex = newIndex;
             this.mainView.scrollToTop();
             MainView.setPersistentValue(INDEX_KEY, this.linkIndex);
+
+            //update menu info
+            this.pageDisplay.setText(this.linkIndex + 1);
+            this.totalDisplay.setText(this.postData.length);
+            this.nameDisplay.setText(this.postData[newIndex].imgSrc)
         }
 
         static cleanLinks() {
@@ -421,9 +441,11 @@ module Viewer {
 
             if (event.clientX >= width_offset && event.clientY >= height_offset) {
                 this.bottomMenu.removeClass('hidden').addClass('bottomMenuShow');
+                this.topMenu.removeClass('hidden').addClass('bottomMenuShow');
 
             } else if (this.bottomMenu.hasClass('bottomMenuShow')) {
                 this.bottomMenu.removeClass('bottomMenuShow').addClass('hidden');
+                this.topMenu.removeClass('bottomMenuShow').addClass('hidden');
             }
 
             if ((event.clientX <= (100) || event.clientX >= (window.innerWidth - 100)) &&
